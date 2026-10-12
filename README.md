@@ -160,28 +160,18 @@ git commit -m "feat: inisialisasi portal akademik KampusKita dan modul audit KSI
 6. Klik **Create repository**.
 
 ### Langkah 3: Hubungkan dan Dorong (Push) Kode ke GitHub
-Salin perintah dari halaman repositori GitHub Anda dan jalankan di terminal:
+Repositori telah berhasil dihubungkan dan di-push ke GitHub:
 ```powershell
-# Ganti <USERNAME> dengan username GitHub Anda
-git branch -M main
-git remote add origin https://github.com/<USERNAME>/portal-kampus-m56.git
+git remote add origin https://github.com/FARIDZZ292/portal-kampus-m56.git
 git push -u origin main
 ```
 
 ### Langkah 4: Mengaktifkan GitHub Pages
-1. Pada halaman repositori Anda di GitHub, buka tab **Settings**.
-2. Di menu navigasi sebelah kiri, klik **Pages** (pada bagian *Code and automation*).
-3. Pada opsi **Build and deployment** -> **Source**, pilih **Deploy from a branch**.
-4. Di bagian **Branch**, pilih branch `main` dan folder `/ (root)`.
-5. Klik **Save**.
-6. Tunggu sekitar 1 hingga 2 menit hingga GitHub Actions selesai memproses situs Anda.
+Fitur GitHub Pages telah diaktifkan secara otomatis pada branch `main` folder `/ (root)`.
 
-### Contoh Bentuk URL Publik:
-Setelah deployment selesai, website dapat diakses secara publik oleh dosen penilai di:
-```text
-https://<USERNAME>.github.io/portal-kampus-m56/
-```
-*(Contoh nyata: `https://ahmadfauzi.github.io/portal-kampus-m56/`)*
+### URL Publik GitHub & GitHub Pages:
+- **Tautan Repositori GitHub:** [https://github.com/FARIDZZ292/portal-kampus-m56](https://github.com/FARIDZZ292/portal-kampus-m56)
+- **Tautan Publik GitHub Pages:** [https://faridzz292.github.io/portal-kampus-m56/](https://faridzz292.github.io/portal-kampus-m56/)
 
 ---
 
