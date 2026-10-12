@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KampusKita - Portal Akademik & Audit Keamanan KSI</title>
+  <meta name="description" content="Portal Akademik Fiktif KampusKita untuk Tugas Audit Laporan M5-M6 Keamanan Sistem Informasi (KSI). Fitur Mahasiswa, Dosen, Admin, dan Simulasi Audit IDOR & Eskalasi Hak Akses.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Educational Warning Banner -->
+  <aside class="edu-banner" id="eduBanner">
+    <div class="edu-banner-content">
+      <span class="edu-badge">PROYEK AUDIT KSI M5–M6</span>
+      <p>
+        <strong>Portal Kampus Fiktif:</strong> Seluruh data mahasiswa, nilai, dan akun adalah <em>data sintetis</em>. 
+        Penyimpanan menggunakan <code>localStorage</code> peramban. Fitur keamanan di halaman audit adalah simulasi edukasi terkontrol.
+      </p>
+    </div>
+    <button class="btn-close-banner" id="btnCloseBanner" title="Tutup pemberitahuan">&times;</button>
+  </aside>
+
+  <!-- App Wrapper -->
+  <div id="appContainer">
+
+    <!-- ==================== LOGIN VIEW ==================== -->
+    <main class="login-view" id="loginView">
+      <div class="login-card-wrapper">
+        <div class="login-brand-header">
+          <div class="brand-logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <h1>KampusKita</h1>
+          <p class="brand-tagline">Sistem Informasi Akademik & Portal Pembelajaran Terpadu</p>
+        </div>
+
+        <div class="login-body">
+          <div class="login-form-pane">
+            <h2>Masuk ke Akun Anda</h2>
+            <p class="login-subtext">Gunakan kredensial akun akademik Anda untuk melanjutkan.</p>
+
+            <form id="loginForm" autocomplete="off">
+              <div class="form-group">
+                <label for="loginUsername">Nama Pengguna (Username)</label>
+                <div class="input-with-icon">
+                  <span class="icon">👤</span>
+                  <input type="text" id="loginUsername" placeholder="Contoh: mhs001" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="loginPassword">Kata Sandi (Password)</label>
+                <div class="input-with-icon">
+                  <span class="icon">🔒</span>
+                  <input type="password" id="loginPassword" placeholder="Masukkan kata sandi" required>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-block" id="btnLoginSubmit">
+                  <span>Masuk ke Portal</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Demo Accounts Guide Panel -->
+          <div class="demo-accounts-pane">
+            <h3>Akun Demo Sintetis</h3>
+            <p class="demo-pane-desc">Klik salah satu kartu untuk mengisi formulir login secara otomatis:</p>
+            
+            <div class="demo-cards-grid">
+              <!-- Mahasiswa 1 -->
+              <div class="demo-card" data-role="mahasiswa" data-user="mhs001" data-pass="mhs123">
+                <div class="demo-card-top">
+                  <span class="badge badge-student">Mahasiswa 1</span>
+                  <span class="chip-click">Pilih</span>
+                </div>
+                <div class="demo-name">Ahmad Fauzi (NIM: 202401001)</div>
+                <div class="demo-cred"><code>mhs001</code> / <code>mhs123</code></div>
+                <div class="demo-desc">Lihat nilai pribadi, kumpul tugas, forum kelas.</div>
+              </div>
+
+              <!-- Mahasiswa 2 -->
+              <div class="demo-card" data-role="mahasiswa" data-user="mhs002" data-pass="mhs123">
+                <div class="demo-card-top">
+                  <span class="badge badge-student">Mahasiswa 2</span>
+                  <span class="chip-click">Pilih</span>
+                </div>
+                <div class="demo-name">Siti Nurhaliza (NIM: 202401002)</div>
+                <div class="demo-cred"><code>mhs002</code> / <code>mhs123</code></div>
+                <div class="demo-desc">Uji batas kepemilikan data pada simulasi IDOR.</div>
+              </div>
+
+              <!-- Dosen -->
+              <div class="demo-card" data-role="dosen" data-user="dosen01" data-pass="dosen123">
+                <div class="demo-card-top">
+                  <span class="badge badge-lecturer">Dosen</span>
+                  <span class="chip-click">Pilih</span>
+                </div>
+                <div class="demo-name">Dr. Budi Santoso, M.Kom.</div>
+                <div class="demo-cred"><code>dosen01</code> / <code>dosen123</code></div>
+                <div class="demo-desc">Periksa tugas mahasiswa, beri nilai & feedback.</div>
+              </div>
+
+              <!-- Admin -->
+              <div class="demo-card" data-role="admin" data-user="admin01" data-pass="admin123">
+                <div class="demo-card-top">
+                  <span class="badge badge-admin">Admin</span>
+                  <span class="chip-click">Pilih</span>
+                </div>
+                <div class="demo-name">Sistem Administrator Kampus</div>
+                <div class="demo-cred"><code>admin01</code> / <code>admin123</code></div>
+                <div class="demo-desc">Kelola akun, tinjau audit log & ekspor CSV.</div>
+              </div>
+            </div>
+
+            <div class="demo-info-note">
+              <span>⚠️</span>
+              <small>Login ini berjalan di sisi frontend menggunakan penyimpanan lokal (localStorage) untuk kebutuhan evaluasi tugas akademik.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ==================== MAIN PORTAL VIEW ==================== -->
+    <div class="portal-view hidden" id="portalView">
+      
+      <!-- SIDEBAR -->
+      <aside class="portal-sidebar" id="portalSidebar">
+        <div class="sidebar-brand">
+          <div class="brand-logo-icon mini">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          </div>
+          <div class="sidebar-brand-text">
+            <h2>KampusKita</h2>
+            <span>Portal Akademik</span>
+          </div>
+          <button class="sidebar-toggle-mobile" id="btnSidebarClose" title="Tutup Menu">&times;</button>
+        </div>
+
+        <div class="sidebar-user-brief">
+          <div class="user-avatar" id="sidebarAvatar">US</div>
+          <div class="user-brief-info">
+            <span class="user-name" id="sidebarUserName">Nama Pengguna</span>
+            <span class="user-role-badge" id="sidebarUserRole">Peran</span>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav" id="sidebarNav">
+          <div class="nav-section-title">MENU UTAMA</div>
+          <button class="nav-item active" data-view="dashboard">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+          </button>
+          
+          <!-- Menu Mahasiswa: Nilai Saya -->
+          <button class="nav-item role-mahasiswa" data-view="grades">
+            <span class="nav-icon">📝</span>
+            <span>Nilai Akademik (KHS)</span>
+          </button>
+
+          <!-- Menu Tugas: Mahasiswa & Dosen -->
+          <button class="nav-item role-mahasiswa role-dosen" data-view="assignments">
+            <span class="nav-icon">📂</span>
+            <span id="navTextAssignments">Tugas Kuliah</span>
+            <span class="nav-counter" id="assignmentBadgeCount">0</span>
+          </button>
+
+          <!-- Menu Diskusi: Semua Peran -->
+          <button class="nav-item" data-view="discussion">
+            <span class="nav-icon">💬</span>
+            <span>Diskusi Kelas</span>
+          </button>
+
+          <div class="nav-section-title">ADMINISTRASI & AUDIT</div>
+
+          <!-- Menu Admin: Kelola Akun -->
+          <button class="nav-item role-admin" data-view="accounts">
+            <span class="nav-icon">👥</span>
+            <span>Kelola Akun Demo</span>
+          </button>
+
+          <!-- Menu Audit Keamanan: Semua Peran (Untuk Edukasi KSI) -->
+          <button class="nav-item" data-view="security-audit">
+            <span class="nav-icon">🛡️</span>
+            <span>Simulasi Audit KSI</span>
+            <span class="badge badge-warning-sm">M5-M6</span>
+          </button>
+
+          <!-- Menu Log Audit: Semua Peran (Akses penuh untuk Admin) -->
+          <button class="nav-item" data-view="audit-logs">
+            <span class="nav-icon">📜</span>
+            <span>Log Keputusan Audit</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <button class="btn btn-outline-danger btn-block btn-logout" id="btnLogout">
+            <span class="icon">🚪</span>
+            <span>Keluar (Logout)</span>
+          </button>
+          <div class="sidebar-system-info">
+            <small>Versi 1.0.0 (Mode Simulasi KSI)</small>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT WRAPPER -->
+      <div class="portal-main-wrapper">
+        
+        <!-- TOP NAVBAR -->
+        <header class="portal-header">
+          <div class="header-left">
+            <button class="mobile-menu-btn" id="btnSidebarOpen" title="Buka Navigasi">
+              <span></span><span></span><span></span>
+            </button>
+            <div class="current-page-indicator">
+              <span class="breadcrumb-app">KampusKita</span>
+              <span class="breadcrumb-sep">/</span>
+              <span class="breadcrumb-current" id="breadcrumbTitle">Dashboard</span>
+            </div>
+          </div>
+
+          <div class="header-right">
+            <div class="semester-pill">
+              <span class="dot-online"></span>
+              <span>Semester Genap 2025/2026</span>
+            </div>
+
+            <button class="btn-icon-subtle" id="btnResetDemoData" title="Reset Semua Data Demo ke Awal">
+              <span>🔄</span>
+              <span class="btn-text-responsive">Reset Data Demo</span>
+            </button>
+
+            <div class="user-profile-widget">
+              <div class="user-avatar-sm" id="headerAvatar">US</div>
+              <div class="user-meta">
+                <span class="meta-name" id="headerUserName">Ahmad Fauzi</span>
+                <span class="meta-role" id="headerUserRole">Mahasiswa</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- CONTENT VIEW CONTAINER -->
+        <main class="portal-content" id="portalContent">
+
+          <!-- ================= VIEW 1: DASHBOARD ================= -->
+          <section class="view-panel" id="viewDashboard">
+            <div class="view-header">
+              <div>
+                <h1 class="view-title" id="dashGreeting">Selamat Datang di KampusKita</h1>
+                <p class="view-subtitle" id="dashSubGreeting">Pantau kemajuan akademik dan aktivitas perkuliahan Anda secara real-time.</p>
+              </div>
+              <div class="view-actions" id="dashActions">
+                <!-- Dynamically filled action button if any -->
+              </div>
+            </div>
+
+            <!-- Role-Specific Statistics Cards Grid -->
+            <div class="stats-grid" id="statsGrid">
+              <!-- Rendered dynamically by script.js based on role -->
+            </div>
+
+            <!-- Dashboard Split Layout -->
+            <div class="dashboard-split-layout">
+              <!-- Left Column: Primary Highlights -->
+              <div class="dash-card">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <span class="card-icon">📌</span>
+                    <h3 id="dashPrimaryCardTitle">Agenda & Pengumuman Akademik</h3>
+                  </div>
+                  <span class="card-badge">Terkini</span>
+                </div>
+                <div class="card-body" id="dashPrimaryCardBody">
+                  <!-- Dynamically rendered according to role -->
+                </div>
+              </div>
+
+              <!-- Right Column: Quick Status & Security Note -->
+              <div class="dash-card">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <span class="card-icon">🛡️</span>
+                    <h3>Status Lingkungan & Audit KSI</h3>
+                  </div>
+                  <span class="badge badge-info">Aman Terkendali</span>
+                </div>
+                <div class="card-body">
+                  <div class="security-status-box">
+                    <div class="status-item">
+                      <span class="status-label">Simulasi IDOR:</span>
+                      <span class="badge badge-neutral" id="dashIdorStatus">Siap Diuji</span>
+                    </div>
+                    <div class="status-item">
+                      <span class="status-label">Simulasi Eskalasi Hak Akses:</span>
+                      <span class="badge badge-neutral" id="dashEscStatus">Siap Diuji</span>
+                    </div>
+                    <div class="status-item">
+                      <span class="status-label">Penyimpanan Sesi:</span>
+                      <span class="badge badge-success">Client-side localStorage</span>
+                    </div>
+                    <div class="status-item">
+                      <span class="status-label">Total Log Aktivitas:</span>
+                      <strong id="dashTotalLogs">0 entri</strong>
+                    </div>
+                  </div>
+                  <div class="quick-audit-cta">
+                    <p>Buka modul pengujian keamanan untuk melihat simulasi kerentanan dan perbaikan otorisasi.</p>
+                    <button class="btn btn-sm btn-outline-primary" id="btnGoAudit">Buka Simulasi Audit</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= VIEW 2: NILAI MAHASISWA (KHS) ================= -->
+          <section class="view-panel hidden" id="viewGrades">
+            <div class="view-header">
+              <div>
+                <h1 class="view-title">Kartu Hasil Studi (KHS) & Nilai Pribadi</h1>
+                <p class="view-subtitle">Daftar nilai matakuliah resmi milik mahasiswa yang sedang aktif.</p>
+              </div>
+              <div class="academic-summary-pill" id="studentGpaBadge">
+                <span>IPK Semester: <strong>3.75</strong></span>
+                <span>Total SKS: <strong>21</strong></span>
+              </div>
+            </div>
+
+            <div class="card table-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <span class="card-icon">📚</span>
+                  <h3>Daftar Nilai Semester Ini</h3>
+                </div>
+                <span class="text-muted-sm" id="gradesStudentOwnerText">Milik: Ahmad Fauzi (NIM: 202401001)</span>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table" id="gradesTable">
+                  <thead>
+                    <tr>
+                      <th>Kode MK</th>
+                      <th>Mata Kuliah</th>
+                      <th>SKS</th>
+                      <th>Dosen Pengampu</th>
+                      <th>Tugas (30%)</th>
+                      <th>UTS (30%)</th>
+                      <th>UAS (40%)</th>
+                      <th>Nilai Akhir</th>
+                      <th>Huruf</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="gradesTableBody">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= VIEW 3: TUGAS KULIAH (MAHASISWA & DOSEN) ================= -->
+          <section class="view-panel hidden" id="viewAssignments">
+            <div class="view-header">
+              <div>
+                <h1 class="view-title" id="assignmentViewTitle">Manajemen Pengumpulan Tugas</h1>
+                <p class="view-subtitle" id="assignmentViewSubtitle">Unggah berkas tugas atau lakukan penilaian tugas mahasiswa.</p>
+              </div>
+            </div>
+
+            <!-- Student Upload Form (Only visible to Mahasiswa) -->
+            <div class="assignment-upload-section role-mahasiswa" id="studentUploadContainer">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <span class="card-icon">📤</span>
+                    <h3>Formulir Pengumpulan Tugas Baru</h3>
+                  </div>
+                  <span class="badge badge-primary">Formulir Mahasiswa</span>
+                </div>
+                <div class="card-body">
+                  <form id="uploadAssignmentForm">
+                    <div class="form-row">
+                      <div class="form-group col-md-6">
+                        <label for="assignCourseSelect">Mata Kuliah *</label>
+                        <select id="assignCourseSelect" required>
+                          <option value="">-- Pilih Mata Kuliah --</option>
+                          <option value="Keamanan Sistem Informasi">Keamanan Sistem Informasi (KSI)</option>
+                          <option value="Pemrograman Web Lanjut">Pemrograman Web Lanjut</option>
+                          <option value="Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak</option>
+                          <option value="Jaringan Komputer">Jaringan Komputer</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-6">
+                        <label for="assignTitleInput">Judul / Nama Tugas *</label>
+                        <input type="text" id="assignTitleInput" placeholder="Contoh: Laporan Audit M5-M6 KSI" required>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="assignFileInput">Pilih Berkas Tugas (Simulasi Unggah PDF/ZIP/DOCX) *</label>
+                      <div class="file-upload-dropzone" id="fileDropzone">
+                        <input type="file" id="assignFileInput" accept=".pdf,.zip,.docx,.txt" required>
+                        <div class="dropzone-label">
+                          <span class="upload-icon">📁</span>
+                          <span class="dropzone-text" id="fileChosenText">Klik atau seret berkas ke sini (PDF, ZIP, DOCX, TXT - Maks 10MB)</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="assignNotesInput">Catatan Mahasiswa (Opsional)</label>
+                      <textarea id="assignNotesInput" rows="2" placeholder="Catatan tambahan mengenai berkas pengumpulan..."></textarea>
+                    </div>
+
+                    <div class="form-actions-right">
+                      <button type="submit" class="btn btn-primary" id="btnSubmitAssignment">
+                        <span>🚀 Kirim Tugas</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- Assignment List Table (Both Student and Lecturer, dynamically adjusted) -->
+            <div class="card table-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <span class="card-icon">📋</span>
+                  <h3 id="assignmentListCardTitle">Riwayat Pengumpulan Tugas</h3>
+                </div>
+                <div class="table-filter-group">
+                  <select id="assignmentStatusFilter" class="form-control-sm">
+                    <option value="ALL">Semua Status</option>
+                    <option value="Menunggu Penilaian">Menunggu Penilaian</option>
+                    <option value="Sudah Dinilai">Sudah Dinilai</option>
+                  </select>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table" id="assignmentTable">
+                  <thead>
+                    <tr>
+                      <th>ID Tugas</th>
+                      <th>Mahasiswa</th>
+                      <th>Mata Kuliah</th>
+                      <th>Nama Tugas</th>
+                      <th>Berkas</th>
+                      <th>Waktu Kumpul</th>
+                      <th>Status</th>
+                      <th>Nilai</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="assignmentTableBody">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= VIEW 4: DISKUSI KELAS ================= -->
+          <section class="view-panel hidden" id="viewDiscussion">
+            <div class="view-header">
+              <div>
+                <h1 class="view-title">Forum Diskusi Kelas</h1>
+                <p class="view-subtitle">Ruang komunikasi akademik interaktif antara mahasiswa, dosen, dan staf kampus.</p>
+              </div>
+              <div class="discussion-filter">
+                <label for="forumCourseFilter">Filter Forum:</label>
+                <select id="forumCourseFilter">
+                  <option value="ALL">Semua Mata Kuliah & Umum</option>
+                  <option value="Keamanan Sistem Informasi">Keamanan Sistem Informasi</option>
+                  <option value="Pemrograman Web Lanjut">Pemrograman Web Lanjut</option>
+                  <option value="Umum & Akademik">Umum & Akademik</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="discussion-container">
+              <div class="discussion-feed" id="discussionFeed">
+                <!-- Dynamically populated messages -->
+              </div>
+
+              <!-- Message Input Box -->
+              <div class="discussion-input-card">
+                <form id="discussionForm">
+                  <div class="form-row">
+                    <div class="form-group col-md-4">
+                      <label for="msgCategory">Topik / Mata Kuliah</label>
+                      <select id="msgCategory" required>
+                        <option value="Keamanan Sistem Informasi">Keamanan Sistem Informasi</option>
+                        <option value="Pemrograman Web Lanjut">Pemrograman Web Lanjut</option>
+                        <option value="Umum & Akademik">Umum & Akademik</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-8">
+                      <label for="msgContent">Pesan Diskusi *</label>
+                      <div class="input-with-send">
+                        <textarea id="msgContent" rows="2" placeholder="Tulis pesan diskusi di sini (bebas XSS dan disanitasi otomatis)..." required></textarea>
+                        <button type="submit" class="btn btn-primary btn-send" id="btnSendMessage">
+                          <span>Kirim</span>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= VIEW 5: KELOLA AKUN DEMO (ADMIN) ================= -->
+          <section class="view-panel hidden" id="viewAccounts">
+            <div class="view-header">
+              <div>
+                <h1 class="view-title">Manajemen Akun Sintetis</h1>
+                <p class="view-subtitle">Tambah, tinjau, dan hapus akun demonstrasi untuk pengujian peran aplikasi.</p>
+              </div>
+            </div>
+
+            <!-- Create Account Card -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <span class="card-icon">➕</span>
+                  <h3>Tambah Akun Demo Baru</h3>
+                </div>
+                <span class="badge badge-admin">Khusus Administrator</span>
+              </div>
+              <div class="card-body">
+                <form id="createAccountForm">
+                  <div class="form-row">
+                    <div class="form-group col-md-3">
+                      <label for="newAccUsername">Username *</label>
+                      <input type="text" id="newAccUsername" placeholder="Contoh: mhs003" required pattern="^[a-zA-Z0-9_-]{3,20}$" title="3-20 karakter alfanumerik">
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="newAccPassword">Password *</label>
+                      <input type="password" id="newAccPassword" placeholder="Kata sandi" required minlength="4">
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="newAccName">Nama Lengkap *</label>
+                      <input type="text" id="newAccName" placeholder="Contoh: Rian Pratama" required>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="newAccRole">Peran Akun (Role) *</label>
+                      <select id="newAccRole" required>
+                        <option value="mahasiswa">Mahasiswa</option>
+                        <option value="dosen">Dosen</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-actions-right">
+                    <button type="submit" class="btn btn-success" id="btnCreateAccount">
+                      <span>Simpan Akun Demo</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Accounts Table -->
+            <div class="card table-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <span class="card-icon">👥</span>
+                  <h3>Daftar Akun Sintetis Aktif</h3>
+                </div>
+                <span class="badge badge-neutral" id="totalAccountsBadge">4 Akun</span>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table" id="accountsTable">
+                  <thead>
+                    <tr>
+                      <th>Username</th>
+                      <th>Nama Lengkap</th>
+                      <th>Peran</th>
+                      <th>Status Default</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="accountsTableBody">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= VIEW 6: SIMULASI AUDIT KEAMANAN (M5-M6 KSI) ================= -->
+          <section class="view-panel hidden" id="viewSecurityAudit">
+            <div class="view-header">
+              <div>
+                <h1 class="view-title">Laboratorium Audit Keamanan Sistem Informasi</h1>
+                <p class="view-subtitle">Eksplorasi terkontrol kerentanan Insecure Direct Object References (IDOR) dan Eskalasi Hak Akses.</p>
+              </div>
+              <span class="badge badge-warning">Simulasi Edukatif Terkendali</span>
+            </div>
+
+            <!-- Top Disclaimer Card -->
+            <div class="alert-box alert-warning-box mb-4">
+              <div class="alert-icon">⚠️</div>
+              <div class="alert-content">
+                <h4>Prinsip Keamanan & Batasan Pengujian</h4>
+                <p>
+                  Seluruh simulasi di bawah ini menggunakan data sintetis lokal dan tidak melakukan serangan aktual ke sistem manapun. 
+                  Tujuan modul ini adalah mendemonstrasikan secara visual <strong>mekanisme kegagalan otorisasi</strong> versus <strong>mekanisme kontrol otorisasi yang benar</strong> untuk keperluan Laporan Audit KSI M5–M6.
+                </p>
+              </div>
+            </div>
+
+            <div class="audit-grid">
+              
+              <!-- SECTION 1: KERENTANAN IDOR -->
+              <div class="card audit-card">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <span class="card-icon">🔓</span>
+                    <div>
+                      <h3>Kerentanan 1: IDOR (Kontrol Akses Objek Lemah)</h3>
+                      <small class="text-muted">Insecure Direct Object Reference pada Permintaan Data Nilai</small>
+                    </div>
+                  </div>
+                  <span class="badge badge-danger">CWE-639</span>
+                </div>
+
+                <div class="card-body">
+                  <div class="audit-explanation">
+                    <p>
+                      <strong>Deskripsi Masalah:</strong> Aplikasi menerima parameter identitas objek (seperti <code>student_id</code>) dari peramban, lalu mengembalikan data tanpa memeriksa apakah pengguna yang sedang login berhak atas objek tersebut.
+                    </p>
+                    <div class="scenario-meta">
+                      <span><strong>Pengguna Saat Ini:</strong> <code id="idorCurrentUserTag">mhs001 (Ahmad Fauzi)</code></span>
+                      <span><strong>Objek Target Sintetis:</strong> <code>mhs002 (Siti Nurhaliza)</code></span>
+                    </div>
+                  </div>
+
+                  <div class="audit-actions-row">
+                    <button class="btn btn-danger" id="btnSimulateIdorVulnerable">
+                      <span>⚠️ Simulasikan Risiko IDOR</span>
+                    </button>
+                    <button class="btn btn-success" id="btnSimulateIdorSecure">
+                      <span>🛡️ Jalankan Pemeriksaan Aman</span>
+                    </button>
+                  </div>
+
+                  <!-- Visual Simulation Result Box -->
+                  <div class="sim-result-box" id="idorResultBox">
+                    <div class="result-box-header">
+                      <span>Hasil Pengujian Simulasi IDOR:</span>
+                      <span class="badge badge-neutral" id="idorResultStatus">Belum Dijalankan</span>
+                    </div>
+                    <div class="result-box-body" id="idorResultContent">
+                      <p class="text-placeholder">Klik salah satu tombol di atas untuk menjalankan pengujian dan melihat respons kontrol akses.</p>
+                    </div>
+                  </div>
+
+                  <div class="remediation-box">
+                    <strong>💡 Rekomendasi Perbaikan:</strong>
+                    <p>Jangan mempercayai ID objek dari client. Validasi kepemilikan objek pada sisi backend berdasarkan sesi terverifikasi pengguna (misal: <code>session.user.id === requested_resource.owner_id</code>).</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SECTION 2: ESKALASI HAK AKSES -->
+              <div class="card audit-card">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <span class="card-icon">⚡</span>
+                    <div>
+                      <h3>Kerentanan 2: Eskalasi Hak Akses (Privilege Escalation)</h3>
+                      <small class="text-muted">Manipulasi Parameter Peran Pengguna pada Sisi Klien</small>
+                    </div>
+                  </div>
+                  <span class="badge badge-danger">CWE-269</span>
+                </div>
+
+                <div class="card-body">
+                  <div class="audit-explanation">
+                    <p>
+                      <strong>Deskripsi Masalah:</strong> Terjadi ketika sistem mempercayai atribut hak akses seperti peran (<code>role: "admin"</code>) yang dikirim atau dimanipulasi dari browser pengguna tanpa verifikasi otoritatif pada sisi server.
+                    </p>
+                    <div class="scenario-meta">
+                      <span><strong>Peran Asli Akun:</strong> <code id="escOriginalRoleTag">mahasiswa</code></span>
+                      <span><strong>Peran yang Diklaim:</strong> <code>admin</code></span>
+                    </div>
+                  </div>
+
+                  <div class="audit-actions-row">
+                    <button class="btn btn-danger" id="btnSimulateEscalationVulnerable">
+                      <span>⚠️ Simulasikan Risiko Eskalasi</span>
+                    </button>
+                    <button class="btn btn-success" id="btnSimulateEscalationSecure">
+                      <span>🛡️ Tunjukkan Kontrol Aman</span>
+                    </button>
+                  </div>
+
+                  <!-- Visual Simulation Result Box -->
+                  <div class="sim-result-box" id="escResultBox">
+                    <div class="result-box-header">
+                      <span>Hasil Pengujian Eskalasi Hak Akses:</span>
+                      <span class="badge badge-neutral" id="escResultStatus">Belum Dijalankan</span>
+                    </div>
+                    <div class="result-box-body" id="escResultContent">
+                      <p class="text-placeholder">Klik salah satu tombol di atas untuk menguji respons sistem terhadap manipulasi peran.</p>
+                    </div>
+                  </div>
+
+                  <div class="remediation-box">
+                    <strong>💡 Rekomendasi Perbaikan:</strong>
+                    <p>Otorisasi wajib ditegakkan secara absolut pada server (RBAC/ABAC). Peran harus diambil dari sesi terenkripsi atau token JWT ber-tanda tangan digital yang divalidasi ke database otoritatif.</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ================= VIEW 7: LOG KEPUTUSAN AUDIT ================= -->
+          <section class="view-panel hidden" id="viewAuditLogs">
+            <div class="view-header">
+              <div>
+                <h1 class="view-title">Log Keputusan Audit & Jejak Aktivitas</h1>
+                <p class="view-subtitle">Pencatatan komprehensif seluruh aktivitas simulasi keamanan dan peristiwa kontrol akses sistem.</p>
+              </div>
+              <div class="view-actions">
+                <button class="btn btn-primary" id="btnExportLogsCsv">
+                  <span>📥 Ekspor Log ke CSV</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="card table-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <span class="card-icon">📜</span>
+                  <h3>Jejak Audit Aktivitas Terkini</h3>
+                </div>
+                <div class="table-filter-group">
+                  <select id="logFilterDecision" class="form-control-sm">
+                    <option value="ALL">Semua Keputusan</option>
+                    <option value="DISETUJUI">DISETUJUI</option>
+                    <option value="DITOLAK">DITOLAK</option>
+                    <option value="DITAHAN">DITAHAN</option>
+                    <option value="PERINGATAN">PERINGATAN</option>
+                  </select>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table" id="auditLogsTable">
+                  <thead>
+                    <tr>
+                      <th>Waktu Aktivitas</th>
+                      <th>Pengguna</th>
+                      <th>Peran</th>
+                      <th>Jenis Aktivitas / Simulasi</th>
+                      <th>Keputusan</th>
+                      <th>Alasan & Keterangan Kontrol</th>
+                    </tr>
+                  </thead>
+                  <tbody id="auditLogsTableBody">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="table-footer-actions">
+                <small class="text-muted" id="logCounterText">Menampilkan 0 entri log</small>
+                <button class="btn btn-sm btn-outline-danger" id="btnClearAuditLogs">Bersihkan Riwayat Log</button>
+              </div>
+            </div>
+          </section>
+
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: BERI NILAI TUGAS (DOSEN) ==================== -->
+  <div class="modal-overlay hidden" id="gradeModalOverlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="gradeModalTitle">Penilaian Tugas Mahasiswa</h3>
+        <button class="modal-close-btn" id="btnGradeModalClose">&times;</button>
+      </div>
+      <form id="gradeForm">
+        <div class="modal-body">
+          <input type="hidden" id="gradeAssignmentId">
+          <div class="grade-modal-meta">
+            <div><strong>Nama Mahasiswa:</strong> <span id="gradeModalStudent">Ahmad Fauzi</span></div>
+            <div><strong>Mata Kuliah:</strong> <span id="gradeModalCourse">Keamanan Sistem Informasi</span></div>
+            <div><strong>Judul Tugas:</strong> <span id="gradeModalAssignTitle">Laporan Audit M5-M6</span></div>
+            <div><strong>Berkas:</strong> <span id="gradeModalFileName">laporan_m5_m6.pdf</span></div>
+          </div>
+
+          <div class="form-group mt-3">
+            <label for="gradeScoreInput">Nilai Angka (0 - 100) *</label>
+            <input type="number" id="gradeScoreInput" min="0" max="100" placeholder="Masukkan nilai 0 s/d 100" required>
+            <small class="form-text text-muted">Contoh: 85 (Skala puluhan 0 s.d. 100)</small>
+          </div>
+
+          <div class="form-group">
+            <label for="gradeFeedbackInput">Umpan Balik / Catatan Dosen</label>
+            <textarea id="gradeFeedbackInput" rows="3" placeholder="Tuliskan catatan evaluasi dan feedback untuk mahasiswa..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" id="btnGradeModalCancel">Batal</button>
+          <button type="submit" class="btn btn-success" id="btnGradeModalSubmit">Simpan Nilai & Publikasikan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: KONFIRMASI RESET DATA ==================== -->
+  <div class="modal-overlay hidden" id="resetConfirmModalOverlay">
+    <div class="modal-box modal-box-sm">
+      <div class="modal-header">
+        <h3>Reset Data Demo KampusKita</h3>
+        <button class="modal-close-btn" id="btnResetModalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Apakah Anda yakin ingin mengatur ulang seluruh data demonstrasi kembali ke kondisi awal?</p>
+        <p class="text-muted-sm">Tindakan ini akan mengembalikan daftar akun, tugas, diskusi, dan riwayat nilai sintetis ke setelan bawaan.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" id="btnResetModalCancel">Batal</button>
+        <button type="button" class="btn btn-danger" id="btnResetModalConfirm">Ya, Reset Sekarang</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
